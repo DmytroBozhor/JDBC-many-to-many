@@ -1,41 +1,40 @@
 package org.example;
 
-import org.example.model.Order;
-import org.example.model.Product;
+import org.example.model.Item;
+import org.example.model.Person;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.function.Consumer;
 
 @Component
 public class Main {
     public static void main(String[] args) {
 
-        /*ApplicationContext applicationContext = new AnnotationConfigApplicationContext("org.example");
-
-        SessionFactory sessionFactory1 = (SessionFactory) applicationContext.getBean("sessionFactory");
-
-        Product product = sessionFactory1.getCurrentSession().get(Product.class, 1);
-
-        System.out.println(product);*/
-
-        Configuration configuration = new Configuration().addAnnotatedClass(Product.class);
-
+        Configuration configuration = new Configuration().addAnnotatedClass(Item.class).addAnnotatedClass(Person.class);
         SessionFactory sessionFactory = configuration.buildSessionFactory();
 
         Session session = sessionFactory.getCurrentSession();
 
-        session.beginTransaction();
+        try {
+            session.beginTransaction();
 
-        Product product = session.get(Product.class, 1);
-        System.out.println(product);
+            Person person = session.get(Person.class, 2);
+            System.out.println(person);
 
-        session.save(new Product("cucamber", 100));
+            List<Item> itemList = person.getItemList();
 
-        session.getTransaction().commit();
+            itemList.forEach(System.out::println);
+
+
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            session.getTransaction().rollback();
+        }
 
         sessionFactory.close();
     }
