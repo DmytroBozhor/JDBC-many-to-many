@@ -1,21 +1,19 @@
 package org.example;
 
-import org.example.model.Item;
+import org.example.model.Passport;
 import org.example.model.Person;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.function.Consumer;
 
 @Component
 public class Main {
     public static void main(String[] args) {
 
-        Configuration configuration = new Configuration().addAnnotatedClass(Item.class).addAnnotatedClass(Person.class);
+        Configuration configuration = new Configuration().addAnnotatedClass(Passport.class).addAnnotatedClass(Person.class);
         SessionFactory sessionFactory = configuration.buildSessionFactory();
 
         Session session = sessionFactory.getCurrentSession();
@@ -23,13 +21,12 @@ public class Main {
         try {
             session.beginTransaction();
 
-            Person person = session.get(Person.class, 2);
-            System.out.println(person);
+            Person person = new Person("boo", 25);
+            Passport passport = new Passport(person, 52463);
 
-            List<Item> itemList = person.getItemList();
+            person.setPassport(passport);
 
-            itemList.forEach(System.out::println);
-
+            session.save(person); // passport will also be saved to the database thanks to @Cascade annotation
 
             session.getTransaction().commit();
         } catch (Exception e) {
