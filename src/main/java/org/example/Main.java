@@ -17,5 +17,11 @@ public class Main {
 
         System.out.println(actorService.findAll());
 
+        actorService.findActorsByNameStartingWith("B").forEach(System.out::println);
+
+        actorService.findActorsByAgeBetween(40, 50).forEach(System.out::println);
+
+        actorService.customQuery().forEach(System.out::println);
+
     }
 }

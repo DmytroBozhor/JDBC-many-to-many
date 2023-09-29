@@ -39,4 +39,16 @@ public class ActorService {
     public List<Actor> findAll() {
         return actorRepository.findAll();
     }
+
+    public List<Actor> findActorsByNameStartingWith(String name){
+        return actorRepository.findActorsByNameStartingWith(name);
+    }
+
+    public List<Actor> findActorsByAgeBetween(int age, int age2){
+        return actorRepository.findActorsByAgeBetween(age, age2);
+    }
+
+    public List<Actor> customQuery(){
+        return actorRepository.customQuery();
+    }
 }
